@@ -1,0 +1,77 @@
+type User {
+  id: ID! @unique
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  follower: [User!]! @relation(name: "Followers")
+  following: [User!]! @relation(name: "Following")
+  answers: [Answer!]! @relation(name: "UserAnswerBy", onDelete: CASCADE)
+  questions: [Question!]! @relation(name: "QuestionByUser")
+  comments: [Comment!]! @relation(name: "UserCommenBy")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Image {
+  id: ID! @unique
+  imgSmallUrl: String!
+  imgMediumUrl: String!
+  imgLargeUrl: String!
+  video: Video! @relation(name: "VideoImage")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Video {
+  id: ID! @unique
+  image: Image! @relation(name: "VideoImage", onDelete: CASCADE)
+  url: String!
+  answer: Answer @relation(name: "AnswerVideo", onDelete: CASCADE)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Answer {
+  id: ID! @unique
+  question: Question! @relation(name: "QuestionToAnswer")
+  userAnswerBy: User! @relation(name: "UserAnswerBy")
+  video: Video! @relation(name: "AnswerVideo")
+  views: Int! @default(value: 0)
+  likes: Int! @default(value: 0)
+  isPrivate: Boolean! @default(value: "false")
+  comments: [Comment!]! @relation(name: "AnswerComments", onDelete: CASCADE)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Comment {
+  id: ID! @unique
+  content: String!
+  userCommenBy: User @relation(name: "UserCommenBy", onDelete: CASCADE)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  answer: Answer! @relation(name: "AnswerComments", onDelete: CASCADE)
+}
+
+type Question {
+  id: ID! @unique
+  title: String!
+  user: User! @relation(name: "QuestionByUser")
+  isAnonymous: Boolean! @default(value: "false")
+  countSkipped: Int! @default(value: 0)
+  views: Int! @default(value: 0)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  answers: [Answer!]! @relation(name: "QuestionToAnswer")
+}
+
+type Notification {
+  id: ID! @unique
+  isHidden: Boolean! @default(value: false)
+  senderId: String!
+  recipientId: String!
+  typeOfNotification: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

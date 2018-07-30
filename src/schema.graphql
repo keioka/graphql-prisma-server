@@ -1,0 +1,105 @@
+"""
+for the type
+"""
+scalar DateTime
+
+type Query {
+  me: User
+  feeds: [Video]
+  users: [User]
+  user(id: ID!): User
+  videos: [Video]
+  video: Video
+  answer: Answer
+  answers: [Answer]
+  comments: [Comment]
+  comment: Comment
+  questions: [Question]
+  question: Question
+}
+
+type Mutation {
+  createUser(
+    firstName: String!
+    lastName: String!
+    password: String!
+    email: String!
+  ): User
+  createVideo(questionId: ID!, userId: ID!): Video
+  createAnswer(userId: ID!, questionId: ID!): Answer
+  createQuestion(title: String!, userId: ID!): Question
+  createComment(content: String!, userId: ID!, answerId: ID!): Comment
+  incrementLikesAnswer(answerId: ID!): Answer
+  incrementViewAnswer(answerId: ID!): Answer
+}
+
+type User {
+  id: ID
+  email: String
+  password: String
+  firstName: String
+  lastName: String
+  questions: [Question]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Image {
+  id: ID!
+  imgSmallUrl: String!
+  imgMediumUrl: String!
+  imgLargeUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Video {
+  id: ID!
+  image: Image
+  url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Answer {
+  id: ID!
+  question: Question
+  user: User
+  video: Video
+  views: Int!
+  likes: Int!
+  isPrivate: Boolean!
+  comments: [Comment!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Comment {
+  id: ID
+  content: String
+  userCommenBy: User
+  answer: Answer
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Question {
+  id: ID
+  title: String
+  user: User
+  isAnonymous: Boolean
+  countSkipped: Int
+  views: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Notification {
+  isRead: Boolean
+  isHidden: Boolean
+  senderId: String
+  recipientId: String
+  typeOfNotification: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
